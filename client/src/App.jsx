@@ -1,35 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Form from "./components/Form";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/books")
+      .then((response) => {
+        setBooks(response.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Form books={books} setBooks={setBooks}/>
+      {!books ? (
+        <p>Loading</p>
+      ) : (
+        books.map((book) => {
+          return (
+            <ul key={book.id}>
+              <li>Title : {book.title}</li>
+              <li>Author : {book.author}</li>
+              <li>Description :{book.description}</li>
+              <li>Category :{book.category}</li>
+              <li>URL : {book.cover_url}</li>
+              <li>Published : {book.publishedat}</li>
+            </ul>
+          );
+        })
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
