@@ -20,6 +20,7 @@ const Form = ({ setBooks, books }) => {
       ...prevBook,
       [name]: value,
     }));
+   
   };
 
   const createBook = (e) => {
@@ -30,8 +31,18 @@ const Form = ({ setBooks, books }) => {
         setBooks([...books, response.data])
         const notify = () => toast("Book added to the shelf!");
         notify()
+        setNewBook({ 
+          title: "",
+          author: "",
+          description: "",
+          category: "",
+          cover_url: "",
+          publishedAt: "",
+        });
       })
       .catch((err) => console.log(err));
+
+      
   };
 
   return (

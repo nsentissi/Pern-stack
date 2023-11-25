@@ -1,45 +1,30 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Form from "./components/Form";
 import "./App.css";
-import moment from"moment";
+import Navbar from "./components/Navbar";
+import Books from "./components/Books";
+import { Routes, Route } from "react-router-dom";
+import BookDetail from "./components/BookDetail";
 
 function App() {
   const [books, setBooks] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/books")
-      .then((response) => {
-        setBooks(response.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const dateConverter = (date) =>{
-   return moment(date).utc().format('MM/DD/YYYY')
-  }
-
   return (
     <>
-      <Form books={books} setBooks={setBooks} />
-      {!books ? (
-        <p>Loading</p>
-      ) : (
-        books.map((book) => {
-          return (
-            <ul className="bookShelf" key={book.id}>
-              <h2>{book.title}</h2>
-              <img src={book.cover_url} alt={book.title} />
-              <p>Author : {book.author}</p>
-              <p>Description :{book.description}</p>
-              <p>Category :{book.category}</p>
-              <p>Published : {dateConverter(book.publishedat)}</p>
-            </ul>
-          );
-        })
-      )}
-    </>
+    <Navbar />
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={<Form books={books} setBooks={setBooks} />}
+      />
+      <Route
+        path="/books"
+        element={<Books books={books} setBooks={setBooks} />}
+      />
+      <Route path="/books/:id" element={<BookDetail />} />
+    </Routes>
+  </>
   );
 }
 
