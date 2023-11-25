@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import axios from "axios"
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Form = ({ setBooks, books }) => {
   const [newBook, setNewBook] = useState({
-    title: "", 
+    title: "",
     author: "",
-    description:"",
-    category:"",
-    cover_url:"",
-    publishedAt:""
+    description: "",
+    category: "",
+    cover_url: "",
+    publishedAt: "",
   });
 
   const handleInputChange = (e) => {
+   
     const { name, value } = e.target;
     setNewBook((prevBook) => ({
       ...prevBook,
@@ -19,40 +22,107 @@ const Form = ({ setBooks, books }) => {
     }));
   };
 
- const createBook = () =>{
-    axios.post("http://localhost:3000/books", newBook)
-    .then((response) => {
-        setBooks([...books, response.data]);
+  const createBook = (e) => {
+    e.preventDefault()
+    axios
+      .post("http://localhost:3000/books", newBook)
+      .then((response) => {
+        setBooks([...books, response.data])
+        const notify = () => toast("Book added to the shelf!");
+        notify()
       })
       .catch((err) => console.log(err));
   };
- 
-  
- 
- return (
+
+  return (
     <div>
-      <form>
-        <h3>Add a new book</h3>
-        <input onChange={handleInputChange} name='title' type="text" placeholder="Title" />
-        <input onChange={handleInputChange} name='author' type="text" placeholder="author" />
-        <input
-          onChange={handleInputChange}
-          type="text"
-          placeholder="Description"
-          name='description'
-        />
-        <input
-          onChange={handleInputChange}
-          type="text"
-          placeholder="Category"
-          name='category'
-        />
-        <input onChange={handleInputChange} type="text" placeholder="URL" name='cover_url' />
-        <input onChange={handleInputChange} type="date" name='publishedAt' />
-        <button onClick={createBook}>Submit</button>
+      <h3>ADD A NEW BOOK</h3>
+      <form className="form">
+        <div className="flex">
+          <label>
+            <input
+              onChange={handleInputChange}
+              required=""
+              placeholder=""
+              type="text"
+              className="input"
+              name="title"
+            />
+            <span>Title</span>
+          </label>
+
+          <label>
+            <input
+              onChange={handleInputChange}
+              required=""
+              placeholder=""
+              type="text"
+              className="input"
+              name="author"
+            />
+            <span>Author</span>
+          </label>
+        </div>
+
+        <label>
+          <input
+            onChange={handleInputChange}
+            required=""
+            placeholder=""
+            type="text"
+            className="input"
+            name="description"
+          />
+          <span>Description</span>
+        </label>
+
+        <label>
+          <input
+            onChange={handleInputChange}
+            required=""
+            placeholder=""
+            type="text"
+            className="input"
+            name="category"
+          />
+          <span>Category</span>
+        </label>
+
+        <label>
+          <input
+            onChange={handleInputChange}
+            required=""
+            placeholder=""
+            type="text"
+            className="input"
+            name="cover_url"
+          />
+          <span>URL</span>
+        </label>
+
+        <label>
+          <input
+            onChange={handleInputChange}
+            required=""
+            type="date"
+            placeholder=""
+            className="input"
+            name="publishedAt"
+          />
+          <span>Published At</span>
+        </label>
+        <div>
+          <button className="fancy" onClick={createBook}>
+            <span className="top-key"></span>
+            <span className="text">Submit</span>
+            <span className="bottom-key-1"></span>
+            <span className="bottom-key-2"></span>
+            <ToastContainer />
+          </button>
+        </div>
       </form>
     </div>
   );
- }
+};
 
 export default Form;
